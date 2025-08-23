@@ -80,7 +80,7 @@
             <property name="maximumSize">
              <size>
               <width>16777215</width>
-              <height>68</height>
+              <height>54</height>
              </size>
             </property>
             <property name="frameShape">
@@ -204,12 +204,12 @@
                   <widget class="QPushButton" name="bt_toggle">
                    <property name="maximumSize">
                     <size>
-                     <width>60</width>
+                     <width>40</width>
                      <height>26</height>
                     </size>
                    </property>
                    <property name="text">
-                    <string>TOGGLE</string>
+                    <string>TG</string>
                    </property>
                   </widget>
                  </item>
@@ -217,7 +217,7 @@
                   <widget class="QPushButton" name="bt_capture">
                    <property name="maximumSize">
                     <size>
-                     <width>60</width>
+                     <width>40</width>
                      <height>26</height>
                     </size>
                    </property>
@@ -230,7 +230,7 @@
                   <widget class="QPushButton" name="bt_star">
                    <property name="maximumSize">
                     <size>
-                     <width>60</width>
+                     <width>40</width>
                      <height>26</height>
                     </size>
                    </property>
@@ -243,7 +243,7 @@
                   <widget class="QPushButton" name="bt_previous">
                    <property name="maximumSize">
                     <size>
-                     <width>50</width>
+                     <width>40</width>
                      <height>26</height>
                     </size>
                    </property>
@@ -256,7 +256,7 @@
                   <widget class="QPushButton" name="bt_next">
                    <property name="maximumSize">
                     <size>
-                     <width>50</width>
+                     <width>40</width>
                      <height>26</height>
                     </size>
                    </property>
@@ -362,7 +362,7 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="QTextEdit" name="textEdit"/>
+         <widget class="QTextEdit" name="tex_info"/>
         </item>
        </layout>
       </widget>

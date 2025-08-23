@@ -51,7 +51,7 @@ class Ui_SkinChapters(object):
         self.verticalLayout_5.setObjectName(u"verticalLayout_5")
         self.frame_top = QFrame(self.frame_3)
         self.frame_top.setObjectName(u"frame_top")
-        self.frame_top.setMaximumSize(QSize(16777215, 68))
+        self.frame_top.setMaximumSize(QSize(16777215, 54))
         self.frame_top.setFrameShape(QFrame.Shape.NoFrame)
         self.frame_top.setFrameShadow(QFrame.Shadow.Raised)
         self.frame_top.setLineWidth(0)
@@ -105,31 +105,31 @@ class Ui_SkinChapters(object):
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
         self.bt_toggle = QPushButton(self.frame_top)
         self.bt_toggle.setObjectName(u"bt_toggle")
-        self.bt_toggle.setMaximumSize(QSize(60, 26))
+        self.bt_toggle.setMaximumSize(QSize(40, 26))
 
         self.horizontalLayout_2.addWidget(self.bt_toggle)
 
         self.bt_capture = QPushButton(self.frame_top)
         self.bt_capture.setObjectName(u"bt_capture")
-        self.bt_capture.setMaximumSize(QSize(60, 26))
+        self.bt_capture.setMaximumSize(QSize(40, 26))
 
         self.horizontalLayout_2.addWidget(self.bt_capture)
 
         self.bt_star = QPushButton(self.frame_top)
         self.bt_star.setObjectName(u"bt_star")
-        self.bt_star.setMaximumSize(QSize(60, 26))
+        self.bt_star.setMaximumSize(QSize(40, 26))
 
         self.horizontalLayout_2.addWidget(self.bt_star)
 
         self.bt_previous = QPushButton(self.frame_top)
         self.bt_previous.setObjectName(u"bt_previous")
-        self.bt_previous.setMaximumSize(QSize(50, 26))
+        self.bt_previous.setMaximumSize(QSize(40, 26))
 
         self.horizontalLayout_2.addWidget(self.bt_previous)
 
         self.bt_next = QPushButton(self.frame_top)
         self.bt_next.setObjectName(u"bt_next")
-        self.bt_next.setMaximumSize(QSize(50, 26))
+        self.bt_next.setMaximumSize(QSize(40, 26))
 
         self.horizontalLayout_2.addWidget(self.bt_next)
 
@@ -182,10 +182,10 @@ class Ui_SkinChapters(object):
         self.verticalLayout_3.setSpacing(0)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.verticalLayout_3.setContentsMargins(0, 0, 0, 0)
-        self.textEdit = QTextEdit(self.frame_info)
-        self.textEdit.setObjectName(u"textEdit")
+        self.tex_info = QTextEdit(self.frame_info)
+        self.tex_info.setObjectName(u"tex_info")
 
-        self.verticalLayout_3.addWidget(self.textEdit)
+        self.verticalLayout_3.addWidget(self.tex_info)
 
         self.split_player.addWidget(self.frame_info)
         self.split_chapters.addWidget(self.split_player)
@@ -235,7 +235,7 @@ class Ui_SkinChapters(object):
         self.bt_ff.setText(QCoreApplication.translate("SkinChapters", u"FF", None))
         self.bt_rw.setText(QCoreApplication.translate("SkinChapters", u"RW", None))
         self.lb_time_b.setText(QCoreApplication.translate("SkinChapters", u"00:00:00.000", None))
-        self.bt_toggle.setText(QCoreApplication.translate("SkinChapters", u"TOGGLE", None))
+        self.bt_toggle.setText(QCoreApplication.translate("SkinChapters", u"TG", None))
         self.bt_capture.setText(QCoreApplication.translate("SkinChapters", u"CAP", None))
         self.bt_star.setText(QCoreApplication.translate("SkinChapters", u"STAR", None))
         self.bt_previous.setText(QCoreApplication.translate("SkinChapters", u"<", None))

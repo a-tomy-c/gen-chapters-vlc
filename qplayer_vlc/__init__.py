@@ -113,7 +113,7 @@ class QPlayer(QWidget, Ui_SkinPlayer):
             '--quiet'
         ]
 
-    def setVideo(self, file: str):
+    def set_video(self, file: str):
         """Cargar video y marcar que hay media disponible"""
         media = self.instance.media_new(file)
         self.player.set_media(media)
@@ -245,12 +245,17 @@ class QPlayer(QWidget, Ui_SkinPlayer):
         if not self.media_loaded:
             return
         value = self.sld_time.value()
-        self.setPosition(value + 100)
+        self.setPosition(value + 20)
 
     def goRewind(self):
         if not self.media_loaded:
             return
-        self.setPosition(self.sld_time.value() - 100)
+        self.setPosition(self.sld_time.value() - 20)
+
+    def _add_time(self, n:int=10):
+        if not self.media_loaded:
+            return
+        self.setPosition(self.sld_time.value() + n)
 
     def _posNext(self):
         if not self.media_loaded:
@@ -282,6 +287,31 @@ class QPlayer(QWidget, Ui_SkinPlayer):
             print(f"Capturado -> {name}.jpg")
         else:
             print("Error al capturar frame")
+
+    def get_position(self) -> float:
+        return self.player.get_position()
+    
+    def get_current_time(self) -> str:
+        return self.ms_hmsz(self.get_time())
+    
+    def get_time(self) -> int:
+        return self.player.get_time()
+    
+    def get_elapsed_time(self) -> int:
+        total_time:int = self.get_length()
+        current_time = self.get_time()
+        res = total_time - current_time
+        return self.ms_hmsz(res)
+
+    def get_length(self) -> int:
+        return self.player.get_length()
+    
+    def get_timestamps(self) -> list:
+        return [self.get_current_time(), self.get_elapsed_time()]
+    
+    def get_video(self) -> str:
+        return self.VIDEOPATH
+        
 
 
 if __name__ == '__main__':
