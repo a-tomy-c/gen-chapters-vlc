@@ -199,6 +199,7 @@ class QPlayer(QWidget, Ui_SkinPlayer):
         # Actualizar tiempos
         current_time: int = self.player.get_time()
         total_time: int = self.player.get_length()
+        # print("cur", current_time, "tot", total_time, end='->')
 
         if current_time >= 0 and total_time > 0:
             current_str = self.ms_hms(current_time)
@@ -206,9 +207,14 @@ class QPlayer(QWidget, Ui_SkinPlayer):
             self.lb_timestamp.setText(self.ms_hmsz(current_time))
             res = total_time - current_time
             self.lb_timestamp_res.setText(self.ms_hmsz(res))
+            # print("::: ", current_str, " RES: ", res)
 
         # Verificar si terminó (redundante con on_end_reached, pero por seguridad)
         if current_time == total_time and total_time > 0:
+            self.timer.stop()
+        # 4:paused, 6:ended 
+        std = self.player.get_state()
+        if std == 4 or std == 6: # estados vlc 4517
             self.timer.stop()
 
     def _mseg_hmsz(self, milliseconds: float | str) -> tuple:
@@ -242,32 +248,25 @@ class QPlayer(QWidget, Ui_SkinPlayer):
         self.stw.setCurrentIndex(index)
 
     def goForward(self):
-        if not self.media_loaded:
-            return
-        value = self.sld_time.value()
-        self.setPosition(value + 20)
+        self._pos_assign(3000)
 
     def goRewind(self):
-        if not self.media_loaded:
-            return
-        self.setPosition(self.sld_time.value() - 20)
-
-    def _add_time(self, n:int=10):
-        if not self.media_loaded:
-            return
-        self.setPosition(self.sld_time.value() + n)
+        self._pos_assign(-3000)
 
     def _posNext(self):
-        if not self.media_loaded:
-            return
-        self.setPosition(self.sld_time.value() + 10)
-        if self.player.get_state() == vlc.State.Playing:
-            self.player.pause()
+        self._pos_assign(100)
 
     def _posPrev(self):
+        self._pos_assign(-100)
+
+    def _pos_assign(self, pos:int=1):
         if not self.media_loaded:
             return
-        self.setPosition(self.sld_time.value() - 10)
+        # self.setPosition(self.sld_time.value() + pos)
+        now_msec = self.player.get_time()
+        time = 0 if now_msec < pos else now_msec + pos
+        self.player.set_time(time)
+
         if self.player.get_state() == vlc.State.Playing:
             self.player.pause()
 

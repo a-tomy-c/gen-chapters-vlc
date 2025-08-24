@@ -11,5 +11,5 @@ if __name__ == '__main__':
     wg = QPlayer()
     wg.setVolume(12)
     wg.show()
-    wg.setVideo(vi1)
+    wg.set_video(vi1)
     sys.exit(app.exec())
