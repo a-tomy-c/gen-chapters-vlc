@@ -209,12 +209,25 @@ class Ui_SkinChapters(object):
         self.verticalLayout_8.setContentsMargins(0, 0, 0, 0)
         self.list_chapters = QListWidget(self.pag1)
         self.list_chapters.setObjectName(u"list_chapters")
+        self.list_chapters.setLayoutDirection(Qt.LayoutDirection.RightToLeft)
 
         self.verticalLayout_8.addWidget(self.list_chapters)
 
         self.stackedWidget.addWidget(self.pag1)
         self.pag2 = QWidget()
         self.pag2.setObjectName(u"pag2")
+        self.verticalLayout_10 = QVBoxLayout(self.pag2)
+        self.verticalLayout_10.setSpacing(0)
+        self.verticalLayout_10.setObjectName(u"verticalLayout_10")
+        self.verticalLayout_10.setContentsMargins(0, 0, 0, 0)
+        self.list_star = QListWidget(self.pag2)
+        self.list_star.setObjectName(u"list_star")
+        self.list_star.setLayoutDirection(Qt.LayoutDirection.RightToLeft)
+        self.list_star.setFrameShape(QFrame.Shape.NoFrame)
+        self.list_star.setFrameShadow(QFrame.Shadow.Plain)
+
+        self.verticalLayout_10.addWidget(self.list_star)
+
         self.stackedWidget.addWidget(self.pag2)
 
         self.verticalLayout_4.addWidget(self.stackedWidget)
@@ -225,6 +238,9 @@ class Ui_SkinChapters(object):
 
 
         self.retranslateUi(SkinChapters)
+
+        self.stackedWidget.setCurrentIndex(0)
+
 
         QMetaObject.connectSlotsByName(SkinChapters)
     # setupUi

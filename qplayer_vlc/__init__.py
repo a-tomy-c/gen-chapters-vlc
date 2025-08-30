@@ -186,6 +186,8 @@ class QPlayer(QWidget, Ui_SkinPlayer):
         if not self.media_loaded:
             return
         self.player.set_position(pos/1e3)
+        # print(self.get_time(), self.get_current_time())
+        self.update_labels()
 
     def updatePos(self):
         """Actualizar posición - solo se llama cuando el timer está activo"""
@@ -195,13 +197,14 @@ class QPlayer(QWidget, Ui_SkinPlayer):
         # Actualizar slider
         pos: float = self.player.get_position() * 1000
         self.sld_time.setValue(int(pos))
+        # print('pos:: ', pos)
 
         # Actualizar tiempos
         current_time: int = self.player.get_time()
         total_time: int = self.player.get_length()
-        # print("cur", current_time, "tot", total_time, end='->')
+        # print("cur", current_time, type(current_time), "tot", total_time)
 
-        if current_time >= 0 and total_time > 0:
+        if current_time >= 0 and total_time > 0 and current_time<=total_time:
             current_str = self.ms_hms(current_time)
             self.lb_time.setText(current_str)
             self.lb_timestamp.setText(self.ms_hmsz(current_time))
@@ -270,6 +273,8 @@ class QPlayer(QWidget, Ui_SkinPlayer):
         if self.player.get_state() == vlc.State.Playing:
             self.player.pause()
 
+        self.update_labels()
+
     def saveCapture(self):
         if not self.media_loaded:
             # "No hay video para capturar"
@@ -286,6 +291,9 @@ class QPlayer(QWidget, Ui_SkinPlayer):
             print(f"Capturado -> {name}.jpg")
         else:
             print("Error al capturar frame")
+        
+        new_path = f'{path}/{name}.jpg'
+        return new_path
 
     def get_position(self) -> float:
         return self.player.get_position()
@@ -310,7 +318,22 @@ class QPlayer(QWidget, Ui_SkinPlayer):
     
     def get_video(self) -> str:
         return self.VIDEOPATH
+
+    def update_labels(self):
+        # Actualizar tiempos
+        current_time: int = self.player.get_time()
+        total_time: int = self.player.get_length()
+        # print("cur", current_time, "tot", total_time)
+
+        if current_time >= 0 and total_time > 0:
+            current_str = self.ms_hms(current_time)
+            self.lb_time.setText(current_str)
+            self.lb_timestamp.setText(self.ms_hmsz(current_time))
+            res = total_time - current_time
+            self.lb_timestamp_res.setText(self.ms_hmsz(res))
         
+    def set_time(self, ms:int):
+        self.player.set_time(ms)
 
 
 if __name__ == '__main__':
