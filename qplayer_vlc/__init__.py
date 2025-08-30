@@ -149,6 +149,7 @@ class QPlayer(QWidget, Ui_SkinPlayer):
     def _on_paused_safe(self):
         """Manejo thread-safe del evento paused"""
         print("Video pausado (thread-safe)")
+        ...
         # Mantenemos el timer activo para mostrar la posición
 
     def _on_stopped_safe(self):
@@ -288,12 +289,15 @@ class QPlayer(QWidget, Ui_SkinPlayer):
         name = self.ms_hmsz(current_time).replace(':', '.')
         success = self.player.video_take_snapshot(0, f'{path}/{name}.jpg', 0, 0)
         if success == 0:
-            print(f"Capturado -> {name}.jpg")
+            msg = 'Capturado -> {name}.jpg'
         else:
-            print("Error al capturar frame")
+            msg = 'Error al capturar frame'
         
         new_path = f'{path}/{name}.jpg'
-        return new_path
+        return {
+            'msg':msg,
+            'path':new_path
+        }
 
     def get_position(self) -> float:
         return self.player.get_position()

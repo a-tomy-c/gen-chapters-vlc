@@ -1,9 +1,10 @@
 import os
 from PySide6.QtWidgets import QWidget, QListWidgetItem
 from PySide6.QtCore import Qt, QTimer, QSize
-from PySide6.QtGui import QIcon, QPixmap
+from PySide6.QtGui import QIcon, QPixmap, QShortcut, QKeySequence
 from skin_chaptersvlc import Ui_SkinChapters
 from qplayer_vlc import QPlayer
+from rw_files import RWFiles
 
 
 class MakeChapters(QWidget):
@@ -37,6 +38,7 @@ class MakeChapters(QWidget):
         self.CHAPTERS = {}
         self.ui.list_chapters.setIconSize(QSize(180,180))
         self.ui.list_chapters.setSpacing(0)
+        self._set_shortcuts()
 
     def dragEnterEvent(self, event):
         if event.mimeData().hasUrls():
@@ -134,13 +136,22 @@ class MakeChapters(QWidget):
         except Exception as _:
             return QIcon()
         
-    def add_item_to_list(self, text:str, image:str):
+    def add_item_to_list(self, msec:int, ts:str, image:str):
+        text = f'{msec}\n{ts}'
         item = QListWidgetItem(text)
         icon = self.load_image_icon(image_path=image)
         # if icon.isNull():
         #     item.setIcon(icon)
         #     print('asigna icono nulo')
         item.setIcon(icon)
+        item.setData(
+            Qt.UserRole,
+            {
+                'msec':msec,
+                'ts':ts,
+                'image':image
+            }
+        )
         self.ui.list_chapters.addItem(item)
 
     def _add_one_chapter(self, path:str):
@@ -149,25 +160,45 @@ class MakeChapters(QWidget):
         # d_timestamps[str(msec)] = self.player.ms_hmsz(msec)
         # li = [f'{v}\n{k}' for k, v in d_timestamps.items()]
         ts = self.player.ms_hmsz(msec)
-        texto = f'{msec}\n{ts}'
+        # texto = f'{msec}\n{ts}'
         # name = f'{ts.replace(":",".")}.jpg'
         name = path
         # name = '/home/tomy/Descargas/vi-1/00.23.05.834.jpg'
-        self.add_item_to_list(text=texto, image=name)
+        self.add_item_to_list(msec=msec, ts=ts, image=name)
         print('name_img: ', name)
 
         if self.timer:
             self.timer.stop()
         print('chapter ya creado....')
 
+        sep = '\n|-'
+        line = f'-- CHAPTER:{sep}{msec}{sep}{ts}{sep}{name}\n\n'
+        self.append_txt(line)
+
     def add_one_chapter(self):
         self.ui.stackedWidget.setCurrentIndex(0)
-        path = self.capture_frame()
+        d = self.capture_frame()
+        path = d.get('path', None)
 
         self.timer = QTimer(self)
         self.timer.setSingleShot(True)
         self.timer.timeout.connect(lambda :self._add_one_chapter(path))
-        self.timer.start(600)
+        self.timer.start(1000)
+
+    def append_txt(self, line:str, name='chapters'):
+        rw = RWFiles()
+        rw.append_txt(f'{name}.tempo.txt', line)
+
+    def _set_shortcuts(self):
+        d = {
+            Qt.Key_Delete:self._delete_item_chapter
+        }
+        for k, v in d.items():
+            QShortcut(QKeySequence(k), self, v, context=Qt.ApplicationShortcut)
+
+    def _delete_item_chapter(self):
+        row = self.ui.list_chapters.currentRow()
+        self.ui.list_chapters.takeItem(row)
 
 
 if __name__ == '__main__':

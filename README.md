@@ -4,6 +4,7 @@ video player usando vlc con python
 
 - python 3.13.5
 - python-vlc
+- `pip install PyYAML`
 
 
 ## Notas
@@ -30,3 +31,34 @@ video player usando vlc con python
 - boton toggle para ver listas
 - temporizador para cargar el icono del item luego de hacer la captura
 - el texto del item usa `\n` (salto de linea) como separador entre el timestamp y los milisegundos
+- hotkey para borrar item de los chapters
+
+
+**rw_files**
+...
+
+
+**vlc**
+
+- estados del vlc:
+
+Expected states by web plugins are:
+    IDLE/CLOSE=0, OPENING=1, PLAYING=3, PAUSED=4,
+    STOPPING=5, ENDED=6, ERROR=7.
+
+
+
+## file configs
+
+configuraciones para makechapters
+
+```yaml
+# list star
+path-star='./star.tempo.txt'
+# list chapters
+path-chapters='./chapters.tempo.txt'
+size-icon=180
+img-default:'defo.png'
+# file info
+path-file-info:./
+```
