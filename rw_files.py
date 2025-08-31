@@ -22,5 +22,9 @@ class RWFiles:
 
 
 if __name__=="__main__":
+    from pprint import pprint
+
     rw = RWFiles()
-    res = ""
+    res = rw.read_yaml('configs_mkchapters.yaml')
+    print(type(res))
+    pprint(res)

@@ -1,5 +1,4 @@
 extras/ 
 __pycache__/
 *.png
-*.jpg
 *.txt

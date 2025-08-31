@@ -1,5 +1,5 @@
 import os
-from PySide6.QtWidgets import QWidget, QListWidgetItem
+from PySide6.QtWidgets import QWidget, QListWidgetItem, QListWidget
 from PySide6.QtCore import Qt, QTimer, QSize
 from PySide6.QtGui import QIcon, QPixmap, QShortcut, QKeySequence
 from skin_chaptersvlc import Ui_SkinChapters
@@ -39,6 +39,7 @@ class MakeChapters(QWidget):
         self.ui.list_chapters.setIconSize(QSize(180,180))
         self.ui.list_chapters.setSpacing(0)
         self._set_shortcuts()
+        # self.ui.list_chapters.setFlow(QListWidget.Flow.LeftToRight)
 
     def dragEnterEvent(self, event):
         if event.mimeData().hasUrls():

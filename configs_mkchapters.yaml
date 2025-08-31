@@ -1,0 +1,17 @@
+# files
+path-chapters: ./chapters.tempo.txt
+path-stars: ./stars.tempo.txt
+
+# configs
+width-right: 300
+volume-init: 40
+player-min-h: 250
+
+# lists
+no-image: ./no-image.jpg
+list-chapters:
+  icon-size: 200
+  width: 150
+list-stars:
+  icon-size: 160
+  width: 150
