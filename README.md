@@ -32,6 +32,9 @@ video player usando vlc con python
 - temporizador para cargar el icono del item luego de hacer la captura
 - el texto del item usa `\n` (salto de linea) como separador entre el timestamp y los milisegundos
 - hotkey para borrar item de los chapters
+- agregado metodos para agregar chapters con icono a las listas (2 listas)
+- nueva skin2, para agregar 2 listas
+
 
 
 **rw_files**
