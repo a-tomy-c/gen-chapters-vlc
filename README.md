@@ -34,7 +34,8 @@ video player usando vlc con python
 - hotkey para borrar item de los chapters
 - agregado metodos para agregar chapters con icono a las listas (2 listas)
 - nueva skin2, para agregar 2 listas
-
+- se cambio la config de tamano de los iconos de ambas listas
+- se agrego boton para borrar item de lista star (skin2)
 
 
 **rw_files**

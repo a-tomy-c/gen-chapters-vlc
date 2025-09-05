@@ -24,8 +24,14 @@ class MakeChapters(QWidget):
         d = rw.read_yaml(path_file='configs_mkchapters.yaml')
 
         self.ui.frame_player.setMinimumHeight(d.get('player-min-h'))
-        self._size_icon_chapters_init(value=d.get('list-chapters')['icon-size'])
-        self._size_icon_stars_init(value=d.get('list-stars')['icon-size'])
+        self._init_icon_size(d)
+        self.setBaseSize(QSize(d.get('width-window'), d.get('height-window')))
+        # self.ui.frame_player.setBaseSize(QSize(d.get('player-width'), d.get('player-min-h')))
+        # self.ui.fm_right.setMinimumWidth(d.get('width-right'))
+        # print('right:: ', d.get('width-right'))
+        self.ui.split_center.setSizes([d.get('player-width'),400])
+        # self.ui.split_main
+
         self.player.setVolume(d.get('volume-init'))
         self.setAcceptDrops(True)
         self.ui.tex_info.setReadOnly(True)
@@ -33,16 +39,20 @@ class MakeChapters(QWidget):
 
         self.ui.slider_chapters.sliderMoved.connect(self._set_value_lb_chapter)
         self.ui.slider_chapters.sliderReleased.connect(self._set_size_icon_chapters)
+        self.ui.slider_stars.sliderMoved.connect(self._set_value_lb_star)
+        self.ui.slider_stars.sliderReleased.connect(self._set_size_icon_stars)
+
         self.ui.bt_rw.clicked.connect(self.backward_1s)
         self.ui.bt_ff.clicked.connect(self.forward_1s)
         self.ui.bt_capture.clicked.connect(self.capture_frame)
         self.ui.bt_previous.clicked.connect(self.previous_frame)
         self.ui.bt_next.clicked.connect(self.next_frame)
-        self.ui.bt_star.clicked.connect(self._add_star)
+        self.ui.bt_star.clicked.connect(self.make_one_star)
         self.ui.bt_toggle.clicked.connect(self.toggle_chapters)
         self.ui.bt_toggle2.clicked.connect(self.toggle_lists)
         self.ui.bt_make.clicked.connect(self.make_one_chapter)
         self.ui.bt_info.clicked.connect(self.clear_chapters)
+        self.ui.bt_delete_star.clicked.connect(self._delete_item_star)
 
         self.STAR = {}
         self.CHAPTERS = {}
@@ -51,22 +61,32 @@ class MakeChapters(QWidget):
 
     def _set_size_icon_chapters(self):
         value = self.ui.slider_chapters.value()
-        self.ui.list_chapters_icons.setIconSize(QSize(value, value))
+        sz = QSize(value, value)
+        self.ui.list_chapters_icons.setIconSize(sz)
+        self.ui.list_star_icons.setIconSize(sz)
 
     def _set_size_icon_stars(self):
         value = self.ui.slider_stars.value()
-        self.ui.list_star_icons.setIconSize(QSize(value, value))
+        sz = QSize(value, value)
+        self.ui.list_chapters.setIconSize(sz)
+        self.ui.list_star.setIconSize(sz)
 
-    def _size_icon_chapters_init(self, value:int):
-        self.ui.slider_chapters.setValue(value)
-        self.ui.list_chapters_icons.setIconSize(QSize(value, value))
+    def _init_icon_size(self, d:dict):
+        # value_max = d.get('list-icon-size-max')
+        value = d.get('list-icon-size')
+        value_min = d.get('list-icon-size-min')
+
         self._set_value_lb_chapter(value)
+        self._set_value_lb_star(value_min)
+        self.ui.slider_chapters.setValue(value)
+        self.ui.slider_stars.setValue(value_min)
 
-    def _size_icon_stars_init(self, value:int):
-        self.ui.slider_stars.setValue(value)
-        self.ui.list_star_icons.setIconSize(QSize(value, value))
-        self._set_value_lb_star(value)
-        self.ui.list_chapters.setIconSize(QSize(value, value))
+        sz = QSize(value, value)
+        szm = QSize(value_min, value_min)
+        self.ui.list_chapters_icons.setIconSize(sz)
+        self.ui.list_star_icons.setIconSize(sz)
+        self.ui.list_chapters.setIconSize(szm)
+        self.ui.list_star.setIconSize(szm)
 
     def _set_value_lb_chapter(self, value:int):
         self.ui.lb_slider_chapters.setText(str(value))
@@ -121,22 +141,17 @@ class MakeChapters(QWidget):
     def toggle_chapters(self):
         self._toggle_page(self.ui.sw_chapters)
 
-    def _mk_timestamp(self, d_timestamp:dict, wlist):
-        msec = self.player.get_time()
-        d_timestamp[str(msec)] = self.player.ms_hmsz(msec)
-        li = [f'{v}\n{k}' for k, v in d_timestamp.items()]
-        wlist.clear()
-        wlist.addItems(li)
-
-    # def make_one_chapter(self):
-    #     self._mk_timestamp(self.CHAPTERS, self.ui.list_chapters_icons)
-    #     self.ui.sw_chapters.setCurrentIndex(0)
-
     def append_txt(self, line:str):
         d = self._read_config_yaml()
         path_chapters = d.get('path-chapters')
         rw = RWFiles()
         rw.append_txt(path_chapters, line)
+
+    def append_txt_star(self, line:str):
+        d = self._read_config_yaml()
+        path_stars = d.get('path-stars')
+        rw = RWFiles()
+        rw.append_txt(path_stars, line)
 
     def _read_config_yaml(self) -> dict:
         rw = RWFiles()
@@ -147,7 +162,7 @@ class MakeChapters(QWidget):
             return QIcon()
         try:
             d = self._read_config_yaml()
-            size = d.get('list-chapters')['icon-size']
+            size = d.get('list-icon-size-max')
             pixmap = QPixmap(image_path)
             if pixmap.isNull():
                 return QIcon()
@@ -159,47 +174,66 @@ class MakeChapters(QWidget):
             return QIcon(scaled_pixmap)
         except Exception as _:
             return QIcon()
-    
-    def add_itemlist_chapter(self, msec:int, ts:str, image:str):
-        text = f'{msec}\n{ts}'
-        item = QListWidgetItem(text)
-        icon = self._load_image_icon(image_path=image)
-        item.setIcon(icon)
-        data = {
-            'msec':msec,
-            'ts':ts,
-            'image':image
-        }
-        item.setData(Qt.UserRole, data)
-        self.ui.list_chapters_icons.addItem(item)
-        item2 = QListWidgetItem(text)
-        item2.setData(Qt.UserRole, data)
-        item2.setIcon(icon)
-        self.ui.list_chapters.addItem(item2)
 
     def _gen_data(self):
         msec = self.player.get_time()
         ts = self.player.ms_hmsz(msec)
+
+        text = f'{msec}\n{ts}'
+        item = QListWidgetItem(text)
+        icon = self._load_image_icon(image_path=self.CAPTURE_PATH)
+        item.setIcon(icon)
+        data = {
+            'msec':msec,
+            'ts':ts,
+            'image':self.CAPTURE_PATH
+        }
+        item.setData(Qt.UserRole, data)
+        item2 = QListWidgetItem(text)
+        item2.setData(Qt.UserRole, data)
+        item2.setIcon(icon)
+
+        sep = '\n|-'
+        line = f'-- CHAPTER:{sep}{msec}{sep}{ts}{sep}{self.CAPTURE_PATH}\n\n'
+        return item, item2, line
     
-    def _write_line_txt_chapter(self, path_image:str):
-        msec = self.player.get_time()
-        ts = self.player.ms_hmsz(msec)
-        self.add_itemlist_chapter(msec=msec, ts=ts, image=path_image)
+    def _write_line_txt_chapter(self):
+        item1, item2, line = self._gen_data()
         if self.timer:
             self.timer.stop()
-        sep = '\n|-'
-        line = f'-- CHAPTER:{sep}{msec}{sep}{ts}{sep}{path_image}\n\n'
         self.append_txt(line=line)
+        self.ui.list_chapters_icons.addItem(item1)
+        self.ui.list_chapters.addItem(item2)
+
+    def _write_line_txt_star(self):
+        item1, item2, line = self._gen_data()
+        if self.timer:
+            self.timer.stop()
+        self.append_txt_star(line=line)
+        self.ui.list_star_icons.addItem(item1)
+        self.ui.list_star.addItem(item2)
 
     def make_one_chapter(self):
         self.ui.sw_chapters.setCurrentIndex(0)
         self.ui.sw_star.setCurrentIndex(0)
+
         data = self.capture_frame()
-        path = data.get('path', None)
+        self.CAPTURE_PATH = data.get('path', None)
         self.timer = QTimer(self)
         self.timer.setSingleShot(True)
-        self.timer.timeout.connect(lambda:self._write_line_txt_chapter(path))
+        self.timer.timeout.connect(self._write_line_txt_chapter)
         self.timer.start(1000)
+    # STAR
+    def make_one_star(self):
+        self.ui.sw_chapters.setCurrentIndex(1)
+        self.ui.sw_star.setCurrentIndex(1)
+        data = self.capture_frame()
+        self.CAPTURE_PATH = data.get('path', None)
+        self.timer = QTimer(self)
+        self.timer.setSingleShot(True)
+        self.timer.timeout.connect(self._write_line_txt_star)
+        self.timer.start(1000)
+    # STAR
 
     def _set_shortcut(self):
         d = {
@@ -210,13 +244,14 @@ class MakeChapters(QWidget):
 
     def _delete_item_chapter(self):
         row = self.ui.list_chapters_icons.currentRow()
-        self.ui.list_chapters_icons.takeItem(row)
-
-    # STAR
-    def _add_star(self):
-        self._mk_timestamp(self.STAR, self.ui.list_star_icons)
-        self.ui.sw_star.setCurrentIndex(0)
-    # STAR
+        if row:
+            self.ui.list_chapters_icons.takeItem(row)
+    
+    def _delete_item_star(self):
+        row = self.ui.list_star_icons.currentRow()
+        if row:
+            self.ui.list_star_icons.takeItem(row)
+    
     def toggle_lists(self):
         index_ch = 1 if self.ui.sw_chapters.currentIndex()==0 else 0
         index_st = 1 if index_ch==0 else 0
@@ -232,6 +267,15 @@ class MakeChapters(QWidget):
             text = text.strip('\n')
         html = f'<span style=color:{fg};>{text}</span>{br}'
         self.ui.tex_info.insertHtml(html)
+
+    def _new_txt_tempos(self):
+        d = self._read_config_yaml()
+        path_chapters = d.get('path-chapters')
+        path_stars = d.get('path-stars')
+        with open(path_chapters, 'w') as txt_chapter:
+            txt_chapter.write('')
+        with open(path_stars, 'w') as txt_star:
+            txt_star.write('')
 
 
 if __name__ == '__main__':

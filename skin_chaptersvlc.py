@@ -321,6 +321,13 @@ class Ui_SkinChapters(object):
 
         self.horizontalLayout_3.addItem(self.horizontalSpacer_3)
 
+        self.bt_delete_star = QPushButton(self.fm_bts_bot)
+        self.bt_delete_star.setObjectName(u"bt_delete_star")
+        self.bt_delete_star.setMinimumSize(QSize(0, 26))
+        self.bt_delete_star.setMaximumSize(QSize(70, 26))
+
+        self.horizontalLayout_3.addWidget(self.bt_delete_star)
+
         self.bt_reload_chapters = QPushButton(self.fm_bts_bot)
         self.bt_reload_chapters.setObjectName(u"bt_reload_chapters")
         self.bt_reload_chapters.setMinimumSize(QSize(60, 26))
@@ -339,7 +346,7 @@ class Ui_SkinChapters(object):
         self.slider_chapters.setObjectName(u"slider_chapters")
         self.slider_chapters.setMinimumSize(QSize(80, 0))
         self.slider_chapters.setMaximumSize(QSize(80, 16777215))
-        self.slider_chapters.setMinimum(100)
+        self.slider_chapters.setMinimum(80)
         self.slider_chapters.setMaximum(250)
         self.slider_chapters.setOrientation(Qt.Orientation.Horizontal)
 
@@ -360,7 +367,7 @@ class Ui_SkinChapters(object):
         self.slider_stars.setObjectName(u"slider_stars")
         self.slider_stars.setMinimumSize(QSize(80, 0))
         self.slider_stars.setMaximumSize(QSize(80, 16777215))
-        self.slider_stars.setMinimum(100)
+        self.slider_stars.setMinimum(80)
         self.slider_stars.setMaximum(250)
         self.slider_stars.setOrientation(Qt.Orientation.Horizontal)
 
@@ -393,8 +400,8 @@ class Ui_SkinChapters(object):
 
         self.retranslateUi(SkinChapters)
 
-        self.sw_chapters.setCurrentIndex(1)
-        self.sw_star.setCurrentIndex(1)
+        self.sw_chapters.setCurrentIndex(0)
+        self.sw_star.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(SkinChapters)
@@ -413,6 +420,7 @@ class Ui_SkinChapters(object):
         self.bt_next.setText(QCoreApplication.translate("SkinChapters", u">", None))
         self.bt_make.setText(QCoreApplication.translate("SkinChapters", u"MAKE", None))
         self.bt_make_chapters.setText(QCoreApplication.translate("SkinChapters", u"MAKE CHAPTERS", None))
+        self.bt_delete_star.setText(QCoreApplication.translate("SkinChapters", u"DEL STAR", None))
         self.bt_reload_chapters.setText(QCoreApplication.translate("SkinChapters", u"RELOAD", None))
         self.bt_info.setText(QCoreApplication.translate("SkinChapters", u"INFO", None))
         self.lb_slider_chapters.setText(QCoreApplication.translate("SkinChapters", u"158", None))

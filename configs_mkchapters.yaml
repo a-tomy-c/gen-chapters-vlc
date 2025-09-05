@@ -3,15 +3,15 @@ path-chapters: ./chapters.tempo.txt
 path-stars: ./stars.tempo.txt
 
 # configs
-width-right: 300
+width-right: 420
 volume-init: 40
 player-min-h: 250
+player-width: 380
+width-window: 880
+height-window: 540
 
 # lists
 no-image: ./no-image.jpg
-list-chapters:
-  icon-size: 160
-  width: 150
-list-stars:
-  icon-size: 100
-  width: 150
+list-icon-size-max: 250
+list-icon-size: 160
+list-icon-size-min: 80
